@@ -1,0 +1,102 @@
+<html>
+     <select id="valgPres"></select> 
+<head>
+    Navn:<input id="navn"></input>
+	E-post:<input id="epost"></input>
+	<button id="regPa">Registrer</button>
+	<p id="utskrift"></p>
+ 
+</head>
+ <body>
+ 
+ <script>  
+         window.onload = start; 
+          var xmlhttp;
+		  var linje;
+		  var regNavn = document.getElementById("navn"); 
+		  var regEpost = document.getElementById("epost"); 
+		  
+          function start(){
+		     xmlhttp = new XMLHttpRequest();
+			 xmlhttp.onreadystatechange = sjekk; 
+			 xmlhttp.open("GET","presentasjon.dat?id="+Math.random(),true);
+			 xmlhttp.send();
+		  }
+         
+		  function sjekk(){
+		    //For å sammenligne datoer
+		     var q = new Date(); 
+		     var m = q.getMonth();
+		     var d = q.getDate();
+		     var y = q.getFullYear();
+			 var t = q.getTime(); 
+		     var date = new Date(y,m,d,t);
+		 
+
+				   if(xmlhttp.readyState === 4 && xmlhttp.status === 200){
+				   
+				   var innhentet = xmlhttp.responseText;
+		           //Deler opp til to indekser pga skift av linje "\n"
+				       var linje = innhentet.split("\n");
+				       for(var i = 0; i < linje.length; i++){
+					    nyLinje = linje[i].split(';');
+						var mydate = new Date(nyLinje[2]);
+						    var year = mydate.getFullYear();
+							var month = mydate.getMonth() + 1;//2= mars fordi jan er 0, derfor +1 for å få mars = 3
+							var day = mydate.getDate();
+							var hour = mydate.getHours();
+							var min = mydate.getMinutes();
+							var tidholder =  year + "-" + month + "-" + day + " " + hour +":" + min;
+							var plassholder = "Antall plasser:" + nyLinje[3];
+							
+						//Sammenligne datoene 
+						            if(q < mydate){
+						           //skriver ut etter ønsket struktur: kode-selskap <h4> lager automatisk linjeskift. 
+					                 document.getElementById("utskrift").innerHTML += "<h4>" + nyLinje[0] +"-"+nyLinje[1]+ "</h4>"+ 
+							         tidholder +"<br/>" +plassholder;
+							 
+                                     //Fylle options listen med kun presentasjoner fremover i tid.
+                                    //Siden det er innenfor IF-Statement så kommer kun de i options. 				         
+							          var el = document.createElement("option");
+							              el.value = nyLinje[0];
+							              el.innerHTML = nyLinje[1];
+							              document.getElementById("valgPres").appendChild(el);
+                                          
+										  document.getElementById("regPa").onclick = regStud;
+				                       }
+									  
+                                          
+					      }	
+				     }   
+               }
+			   
+			   function regStud(){
+			            
+			             var regPres = document.getElementById("valgPres").value; 
+						 var skrivNavn = regNavn.value; 
+						 var skrivEpost = regEpost.value; 
+			               
+						   xmlhttp = new XMLHttpRequest();
+						   xmlhttp.onreadystatechang = regStatus;
+						   xmlhttp.open("GET","regpresentasjon.php?regPres="+regPres+'&skrivNavn='+skrivNavn+'&skrivEpost='+skrivEpost,true);
+						   xmlhttp.send();
+						   
+						  
+						  
+			   }
+			   
+			   function regStatus(){
+			   
+			     if(xmlhttp.readyState === 4 && xmlhttp.status === 200){
+						      alert("Registrert");
+						  }
+			   }
+		   
+ 
+ 
+     
+ 		   
+ </script> 
+ </body>
+ 
+ </html> 
