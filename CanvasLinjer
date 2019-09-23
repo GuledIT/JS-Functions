@@ -1,0 +1,34 @@
+function oppstart(){
+				
+					  var gtx = document.getElementById("canvas").getContext("2d");
+
+                       //linje
+					     for(var j = 0; j < 4; j++){
+					       for(var i = 0; i < 21; i++){
+					       
+						    
+							 //Rød om i = partall
+						    if(i%2 == 0){
+							  gtx.beginPath();
+					          gtx.lineWidth=1;
+						      gtx.strokeStyle ="red";
+							  gtx.moveTo(200*j,0);
+					          gtx.lineTo(35*i,600);
+					          gtx.stroke();
+							 //Grønn om i = Oddetall
+						    } else{
+							  gtx.beginPath();
+					          gtx.lineWidth=1;
+							  gtx.strokeStyle ="green";
+							  gtx.moveTo(200*j,0);
+					          gtx.lineTo(35*i,600);
+						
+					          gtx.stroke();
+							  
+							}
+	
+				        }
+ 
+			         }
+
+		          }    
