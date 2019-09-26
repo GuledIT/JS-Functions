@@ -1,0 +1,58 @@
+<html>
+      <head>
+	    
+		
+		  
+		 <script>
+	   window.onload = start;
+	     var xmlhttp;
+		 var fly; 
+		 
+	   function start(){
+	        
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = hentFly;
+			xmlhttp.open("GET", "fly.json?id="+Math.random(),true);
+			xmlhttp.send();
+	   
+	   }
+       function hentFly(){
+	        if(xmlhttp.readyState === 4 && xmlhttp.status === 200){
+			    
+				fly = JSON.parse(xmlhttp.responseText); 
+				
+				  for(var i=0; i <fly.length; i++){
+				     var el = document.createElement("option"); //Lager "Options verdier basert på hva som er innhentet fra fila"
+					 el.value = fly[i].kode;
+					 el.innerHTML = fly[i].flynavn;
+					 document.getElementById("selectFtype").appendChild(el);
+					 
+				  }
+			
+			}
+	   
+	   }
+ 
+		 </script>             
+		  
+      </head> 
+	  
+	  
+   
+   
+    <body>
+	   Flytype <select id="selectFtype"> </select> <br />
+	   År: <input id="Aar"/><br />
+	   Produsent <select id="selectProd"> 
+	              <option value="Airbus">Airbus</option>
+				  <option value="United">United</option> 
+				  </select> <br />
+	  Kommentar: <input id="gullKorn"/> <br />
+	  <button id="reg">Registrer</button> 
+	
+	
+	
+	  
+   </body>
+   
+ </html>
