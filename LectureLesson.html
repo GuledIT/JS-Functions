@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+         
+        
+    </head>
+    <body>
+         <p id="hvemForeleser"></p>
+         <p id="utskriftNaa"></p>
+         <p id="utskriftIdag"></p>
+         
+        <script>
+        window.onload = start;
+        //Du ønsket disse verdiene globale 
+        var avtalefil = "avtaler"; 
+        var foreleser = "Tom Heine Natt";
+        var minDato = new Date();
+        var xmlhttp;
+        var linje;
+        var nyLinje;
+        
+        function start(){
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = kontroll;
+            xmlhttp.open("GET",avtalefil+".dat?id="+Math.random(),true);
+            xmlhttp.send();
+            
+            document.getElementById("hvemForeleser").innerHTML = "<h1>" + foreleser + "<h1>";
+            document.getElementById("utskriftNaa").innerHTML = "<h4>" +"Nå"+"</h4>";
+            document.getElementById("utskriftIdag").innerHTML = "<h4>" +"Idag"+"</h4>";
+        }
+        
+        function kontroll(){
+        
+               
+               if(xmlhttp.readyState === 4 && xmlhttp.status === 200){
+                  var innhentet = xmlhttp.responseText;
+                     
+                     linje = innhentet.split("\n");
+                    
+                    for(var i = 0; i < linje.length; i++){
+                        nyLinje = linje[i].split(";");
+                        //Verdier inn 
+                        var startDato = new Date(nyLinje[0]);
+                        var sluttDato = new Date(nyLinje[1]);
+                        var tittel = nyLinje[2];
+                        var sted = nyLinje[3];
+                        var icon = '<img src="' +nyLinje[4]+'.png" />'; 
+                       
+                       //Dager og måned
+                        var startDag = startDato.getDate();
+                        var startMaaned = startDato.getMonth();
+                        var startAar = startDato.getFullYear();
+                        
+                        var sluttDag = sluttDato.getDate();
+                        var sluttMaaned = sluttDato.getMonth();
+                        var sluttAar = sluttDato.getFullYear();
+                        
+                        
+                        //Timene
+                        var startTime = startDato.getHours();
+                        var sluttTime = sluttDato.getHours(); 
+                        var startMinutt = startDato.getMinutes();
+                        var sluttMinutt = sluttDato.getMinutes();
+                        //Tid Nå 
+                        var timeNaa = minDato.getHours();
+                        var dag = minDato.getDate();
+                        var maaned = minDato.getMonth();
+                        var aar = minDato.getFullYear();
+                        
+                        //Oppstart, avslutning og tid nå. 
+                        var oppstart = new Date(startAar,startMaaned,startDag);
+                        var slutt = new Date(sluttAar,sluttMaaned,sluttDag);
+                        var tidNaa = new Date(aar,maaned,dag);
+                        
+                         //Betingelser for utskrift
+                         if(minDato >= startDato && minDato < sluttDato && dag === sluttDag ){
+                             alert(sluttDato);
+                             document.getElementById("utskriftNaa").innerHTML += 
+                             icon + tittel +"(" + sted +")" + "Fra" +" " + startTime + ":" + startMinutt + "til" + " " + sluttTime + ":" + sluttMinutt;
+                         }
+                         /*Tanken er at hendelsen skal være på samme dagen, men enten senere || tidligere i dagen*/
+                         else if(tidNaa <= oppstart && dag === sluttDag ) {
+                             document.getElementById("utskriftIdag").innerHTML += 
+                             icon + tittel +"(" + sted +")" + "Fra" +" " + startTime + ":" + startMinutt + 
+							 "til" + " " + sluttTime + ":" + sluttMinutt + "<br>";
+                         }
+                        
+                    }
+               }
+            
+        } 
+
+         </script>
+    </body>
+    
+    
+    
+</html> 
